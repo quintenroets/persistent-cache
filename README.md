@@ -1,7 +1,7 @@
 # Cache
 [![PyPI version](https://badge.fury.io/py/persistent-function-cache.svg)](https://badge.fury.io/py/persistent-function-cache)
 ![PyPI downloads](https://img.shields.io/pypi/dm/persistent-function-cache)
-![Python version](https://img.shields.io/badge/python-3.10+-brightgreen)
+![Python version](https://img.shields.io/badge/python-3.10--3.12-brightgreen)
 ![Operating system](https://img.shields.io/badge/os-linux%20%7c%20macOS%20%7c%20windows-brightgreen)
 ![Coverage](https://img.shields.io/badge/coverage-88%25-brightgreen)
 
