@@ -1,21 +1,19 @@
 import inspect
 import io
 from types import FunctionType, ModuleType
-from typing import Union
-
-from .. import decorator
 
 
 class Reducer:
-    """
-    Enherit from this class to implement own custom pickler.
-    The result of each function are pickled further with their custom pickling function,
-    so make sure to reduce each object to a new object in each reduction function
-    in order to avoid infinity recursive calls.
+    """Inherit from this class to implement own custom pickler.
+
+    The result of each function are pickled further with their custom
+    pickling function, so make sure to reduce each object to a new
+    object in each reduction function in order to avoid infinity
+    recursive calls.
     """
 
     @classmethod
-    def reduce_code(cls, code_object: Union[FunctionType, ModuleType, type]) -> str:
+    def reduce_code(cls, code_object: FunctionType | ModuleType | type) -> str:
         """
         custom lambda reduction needed:
             https://www.pythonpool.com/cant-pickle-local-object/
@@ -34,9 +32,6 @@ class Reducer:
         return reduction
 
     @classmethod
-    def reduce_file_objects(cls, _: Union[io.BytesIO, io.BufferedWriter]) -> str:
-        # Closed file pointers cannot and do not need to be pickled for cache functionality
+    def reduce_file_objects(cls, _: io.BytesIO | io.BufferedWriter) -> str:
+        # Closed file pointers cannot and should not be pickled for cache functionality
         return ""
-
-
-cache = decorator.cache(Reducer)
