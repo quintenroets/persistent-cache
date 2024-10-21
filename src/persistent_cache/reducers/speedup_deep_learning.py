@@ -1,35 +1,37 @@
 import math
-from typing import Any, Tuple
+from typing import Any
 
-import numpy as np
 import torch
+from numpy.typing import NDArray
 from torch.utils.data import Dataset
 
-from .. import decorator
 from . import deep_learning
 
 SEED_VALUE = 493
+LARGE_DIMENSION = 10000
 
 
 class Reducer(deep_learning.Reducer):
     @classmethod
-    def reduce_np_array(cls, array: np.ndarray) -> Tuple[Tuple[int], Any]:
+    def reduce_np_array(cls, array: NDArray[Any]) -> Any:
         shape = array.shape
-        if shape and math.prod(shape) > 10000:
-            # only use part of array large for speedup
-            length = shape[0] if shape else 0
-            data = (array[13**17 % length]) if length > 0 else []
-            reduction = shape, data
-        elif shape:
-            reduction = list(array)
+        reduction: Any
+        if shape:
+            if math.prod(shape) > LARGE_DIMENSION:
+                # only use part of array large for speedup
+                length = shape[0] if shape else 0
+                data = (array[13**17 % length]) if length > 0 else []
+                reduction = shape, data
+            else:
+                reduction = list(array)
         else:
             reduction = array.item()
         return reduction
 
     @classmethod
-    def reduce_model(cls, model: torch.nn.Module):
-        weights, implementation = super(Reducer, cls).reduce_model(model)
-
+    def reduce_model(cls, model: torch.nn.Module) -> tuple[Any, Any]:
+        weights: Any
+        weights, implementation = super().reduce_model(model)
         length = len(weights)
         if length > 0:
             # only use part of weights for speedup
@@ -40,11 +42,11 @@ class Reducer(deep_learning.Reducer):
         return weights, implementation
 
     @classmethod
-    def reduce_dataset(cls, dataset: Dataset):
-        # ignore len(dataset) warning
-        length = len(dataset)  # noqa
+    def reduce_dataset(cls, dataset: Dataset[Any]) -> tuple[int, Any, Any]:
+        length = len(dataset)  # type: ignore[arg-type]
 
-        # fix random seed to have deterministic hash for datasets with random augmentation
+        # fix random seed to have deterministic hash
+        # for datasets with random augmentation
         torch.random.manual_seed(SEED_VALUE)
 
         # only use part of dataset for speedup
@@ -57,8 +59,5 @@ class Reducer(deep_learning.Reducer):
         return length, data, label
 
     @classmethod
-    def reduce_tensor(cls, tensor: torch.Tensor):
+    def reduce_tensor(cls, tensor: torch.Tensor) -> NDArray[Any]:
         return tensor.detach().cpu().numpy()
-
-
-cache = decorator.cache(Reducer)

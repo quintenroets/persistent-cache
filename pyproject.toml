@@ -1,0 +1,71 @@
+[project]
+name = "persistent-function-cache"
+version = "0.1.0"
+description = "Persistent cache for expensive functions"
+authors = [{name = "Quinten Roets", email = "qdr2104@columbia.edu"}]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.10, <3.13"
+dependencies = [
+    "package-utils >=0.6.7, <1",
+    "powercli >=0.3.2, <1",
+    "superpathlib >=2.0.9, <3",
+]
+
+[project.optional-dependencies]
+dev = [
+    "package-dev-tools >=0.5.11, <1",
+    "package-dev-utils >=0.1.6, <1",
+    "numpy >=1.26.0, <3",
+    "torch >=1.26.0, <3",
+]
+
+[project.urls]
+"Source Code" = "https://github.com/quintenroets/persistent-cache"
+
+[project.scripts]
+clear-persistent-cache = "persistent_cache.cli.clear_cache:entry_point"
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.coverage.run]
+command_line = "-m pytest tests"
+
+[tool.coverage.report]
+precision = 4
+fail_under = 80
+
+[tool.mypy]
+strict = true
+no_implicit_reexport = false
+
+[tool.pytest.ini_options]
+pythonpath = [
+    "src", ".",
+]
+
+[tool.ruff]
+fix = true
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
+    "ANN101",   # annotate self
+    "ANN102",   # annotate cls
+    "ANN401",   # annotated with Any
+    "D",        # docstrings
+    "G004",     # logging f-string
+]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = [
+    "F401"  # unused import
+]
+"tests/*" = [
+    "S101"  # assert used
+]
+
+[tool.setuptools.package-data]
+persistent_cache = ["py.typed"]
