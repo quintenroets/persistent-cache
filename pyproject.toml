@@ -1,5 +1,5 @@
 [project]
-name = "persistent-cache"
+name = "persistent-function-cache"
 version = "0.1.0"
 description = "Persistent cache for expensive functions"
 authors = [{name = "Quinten Roets", email = "qdr2104@columbia.edu"}]
