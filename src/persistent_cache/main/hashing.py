@@ -41,12 +41,6 @@ class HashPickler(pickle.Pickler):
             argument_types = extract_types(method)
             for argument_type in argument_types:
                 self.reducers[argument_type] = method
-        """
-        from rich.pretty import pprint
-
-        pprint(self.reducers)
-        exit()
-        """
 
     def reducer_override(self, obj: Any) -> Any:
         """The goal of this pickler is to create hashes of complex objects, not to
