@@ -4,13 +4,28 @@ import hashlib
 import inspect
 import io
 import pickle
-from typing import TYPE_CHECKING, Any, get_args, get_type_hints
+from types import UnionType
+from typing import TYPE_CHECKING, Any, get_args, get_origin, get_type_hints
 
 from persistent_cache.reducers.base import Reducer
 
 if TYPE_CHECKING:
-    from collections.abc import Callable, Iterator
-    from typing import BinaryIO
+    from collections.abc import Callable, Iterator  # pragma: nocover
+    from typing import BinaryIO  # pragma: nocover
+
+
+def extract_types(method: Callable[[Any], Any]) -> Iterator[type]:
+    type_hints = get_type_hints(method).values()
+    if type_hints:
+        argument_type = next(iter(type_hints))
+        origin = get_origin(argument_type)
+        arguments = get_args(argument_type)
+        if origin is UnionType:
+            yield from arguments
+        elif origin is not None:
+            yield origin
+        else:
+            yield argument_type
 
 
 class HashPickler(pickle.Pickler):
@@ -23,13 +38,15 @@ class HashPickler(pickle.Pickler):
         self.reducer = reducer
         self.reducers = {}
         for _, method in inspect.getmembers(reducer, predicate=inspect.ismethod):
-            type_hints = get_type_hints(method).values()
-            if type_hints:
-                argument_type = next(iter(type_hints))
-                argument_types = get_args(argument_type) or (argument_type,)
-                for argument_type in argument_types:
-                    self.reducers[argument_type] = method
-        self.reducers.pop(Any, None)
+            argument_types = extract_types(method)
+            for argument_type in argument_types:
+                self.reducers[argument_type] = method
+        """
+        from rich.pretty import pprint
+
+        pprint(self.reducers)
+        exit()
+        """
 
     def reducer_override(self, obj: Any) -> Any:
         """The goal of this pickler is to create hashes of complex objects, not to

@@ -51,7 +51,7 @@ class Reducer(deep_learning.Reducer):
 
         # only use part of dataset for speedup
         data = dataset[13**17 % length] if length > 0 else []
-        if isinstance(data, tuple):
+        if isinstance(data, tuple) and len(data) == 2:  # noqa: PLR2004
             data, label = data
         else:
             label = None

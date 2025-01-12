@@ -1,14 +1,14 @@
 import io
 import math
 from collections.abc import Callable
-from typing import Any, TypeVar
+from typing import Any
 
 import cli
 import pytest
 
-from persistent_cache.caches import base, deep_learning, speedup_deep_learning
+from persistent_cache import cache, deep_learning, speedup_deep_learning
 
-F = TypeVar("F", bound=Callable)  # type: ignore[type-arg]
+caches = [cache, deep_learning.cache, speedup_deep_learning.cache]
 
 
 def calculate(*args: Any, **kwargs: Any) -> None:
@@ -16,11 +16,18 @@ def calculate(*args: Any, **kwargs: Any) -> None:
     cli.console.print(args, kwargs)
 
 
-caches = [base.cache, deep_learning.cache, speedup_deep_learning.cache]
-
-
-@pytest.mark.parametrize("cache", caches)
-def test_cache_with_argument_combination(cache: Callable) -> None:  # type: ignore[type-arg]
-    cached_function = cache(calculate)
+def verify_cached_function(function: Callable[..., Any]) -> None:
     with io.BytesIO() as fp:
-        cached_function(fp, lambda x: x, math, {})
+        function(fp, lambda x: x, math, {})
+
+
+@pytest.mark.parametrize("cache_decorator", caches)
+def test_cache_with_argument_combination(cache_decorator: Callable[..., Any]) -> None:
+    cached_function = cache_decorator(calculate)
+    verify_cached_function(cached_function)
+
+
+@pytest.mark.parametrize("cache_decorator", caches)
+def test_cache_as_function(cache_decorator: Callable[..., Any]) -> None:
+    cached_function = cache_decorator()(calculate)
+    verify_cached_function(cached_function)
