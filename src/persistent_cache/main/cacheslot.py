@@ -15,12 +15,11 @@ class CacheSlot(Generic[T]):
         self,
         function: Callable[..., T],
         args: tuple[Any, ...],
-        kwargs: Any,
         key_reducer: type[Reducer] = Reducer,
         cache_path: Path = Path.cache,
     ) -> None:
         # change cache key when implementation changes
-        cache_keys = (function, args, kwargs)
+        cache_keys = (function, args)
         self.location = (
             cache_path
             / function.__module__.replace(".", "_")
