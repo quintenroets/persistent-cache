@@ -7,6 +7,7 @@ import cli
 import pytest
 
 from persistent_cache import cache, deep_learning, speedup_deep_learning
+from persistent_cache.reducers import Reducer
 
 caches = [cache, deep_learning.cache, speedup_deep_learning.cache]
 
@@ -51,5 +52,35 @@ def test_cache_with_argument_names(cache_decorator: Callable[..., Any]) -> None:
     cached_function = cache_decorator(
         calculate_with_name,
         cache_key_arguments=cache_key_arguments,
+    )
+    cached_function("test")
+
+
+@pytest.mark.parametrize("cache_decorator", caches)
+def test_cache_with_extra_cache_key(
+    cache_decorator: Callable[..., Any],
+) -> None:
+    cached_function = cache_decorator(calculate_with_name, extra_cache_keys="value")
+    cached_function("test")
+
+
+@pytest.mark.parametrize("cache_decorator", caches)
+def test_cache_with_extra_cache_keys(
+    cache_decorator: Callable[..., Any],
+) -> None:
+    cached_function = cache_decorator(
+        calculate_with_name,
+        extra_cache_keys=("value",),
+    )
+    cached_function("test")
+
+
+@pytest.mark.parametrize("cache_decorator", caches)
+def test_cache_with_reducer(
+    cache_decorator: Callable[..., Any],
+) -> None:
+    cached_function = cache_decorator(
+        calculate_with_name,
+        key_reducer=Reducer,
     )
     cached_function("test")

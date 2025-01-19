@@ -54,7 +54,7 @@ class HashPickler(pickle.Pickler):
             reduction = NotImplemented
         else:
             mapping = reducer(obj)
-            str_mapping = str(object_to_bytes(self.reducer, mapping))
+            str_mapping = str(item_to_bytes(self.reducer, mapping))
             reduction = str, (str_mapping,)
         return reduction
 
@@ -65,15 +65,16 @@ class HashPickler(pickle.Pickler):
                     yield reducer
 
 
-def compute_hash(key_reducer: type[Reducer], *args: Any) -> str:
-    data = object_to_bytes(key_reducer, args)
+def compute_hash(key_reducer: type[Reducer], items: Iterator[Any]) -> str:
+    data = item_to_bytes(key_reducer, tuple(items))
     # use fast hash function because it is not used for security
     return hashlib.new("sha1", data=data, usedforsecurity=False).hexdigest()
 
 
-def object_to_bytes(key_reducer: type[Reducer], args: Any) -> bytes:
+def item_to_bytes(key_reducer: type[Reducer], item: Any) -> bytes:
     with io.BytesIO() as fp:
         # Use custom pickler to generate bytes from complex structures
-        HashPickler(fp, key_reducer).dump(args)
+        pickler = HashPickler(fp, key_reducer)
+        pickler.dump(item)
         fp.seek(0)
         return fp.read()
