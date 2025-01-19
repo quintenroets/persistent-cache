@@ -1,6 +1,6 @@
 [project]
 name = "persistent-function-cache"
-version = "0.2.0"
+version = "0.2.1"
 description = "Persistent cache for expensive functions"
 authors = [{name = "Quinten Roets", email = "qdr2104@columbia.edu"}]
 license = {text = "MIT"}
