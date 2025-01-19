@@ -3,6 +3,7 @@ import pickle
 from collections.abc import Callable, Iterable, Iterator
 from dataclasses import dataclass
 from functools import cached_property
+from inspect import BoundArguments
 from typing import Any
 
 from persistent_cache.models import Path
@@ -18,6 +19,7 @@ class CacheSlot:
     kwargs: dict[str, Any]
     directory: Path
     key_arguments: Iterable[str] | str | None
+    argument_reducers: dict[str, Callable[[Any], Any]] | None
     extra_keys: Any
     key_reducer: type[Reducer] | None
     deep_learning: bool
@@ -60,17 +62,25 @@ class CacheSlot:
 
     @property
     def argument_values(self) -> Iterator[Any]:
-        if self.key_arguments is None:
+        if self.key_arguments is None and self.argument_reducers is None:
             yield from self.args
             yield from self.kwargs.values()
         else:
             arguments = inspect.signature(self.function).bind(*self.args, **self.kwargs)
             arguments.apply_defaults()
+            yield from self.extract_argument_values(arguments)
+
+    def extract_argument_values(self, arguments: BoundArguments) -> Iterator[Any]:
+        if self.key_arguments is not None:
             if isinstance(self.key_arguments, str):
                 yield arguments.arguments.get(self.key_arguments)
             else:
                 for name in self.key_arguments:
                     yield arguments.arguments.get(name)
+        if self.argument_reducers is not None:
+            for argument_name, reducer in self.argument_reducers.items():
+                argument = arguments.arguments.get(argument_name)
+                yield reducer(argument)
 
     @property
     def reducer(self) -> type[Reducer]:
