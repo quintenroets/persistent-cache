@@ -84,3 +84,14 @@ def test_cache_with_reducer(
         key_reducer=Reducer,
     )
     cached_function("test")
+
+
+@pytest.mark.parametrize("cache_decorator", caches)
+def test_cache_with_argument_reducer(
+    cache_decorator: Callable[..., Any],
+) -> None:
+    cached_function = cache_decorator(
+        calculate_with_name,
+        argument_reducers={"value": lambda x: x.strip()},
+    )
+    cached_function("test")
