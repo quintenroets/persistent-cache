@@ -84,7 +84,7 @@ def cache(  # noqa: PLR0913
                 cache_slot.value = result
             return result
 
-        return cast(F, wrapped_function)
+        return cast("F", wrapped_function)
 
     if function is not None:
         cache_decorator = cache_decorator(function)
