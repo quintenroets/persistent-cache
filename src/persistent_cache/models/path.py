@@ -15,6 +15,6 @@ class Path(superpathlib.Path):
 
     @classmethod
     @classproperty
-    def cache(cls: type[T]) -> T:
+    def cache(cls) -> Self:
         path = cls.script_assets / cls.source_root.name
-        return cast(T, path)
+        return cast("Self", path)
