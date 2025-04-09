@@ -15,18 +15,6 @@ class Path(superpathlib.Path):
 
     @classmethod
     @classproperty
-<<<<<<< HEAD
     def cache(cls: type[T]) -> T:
         path = cls.script_assets / cls.source_root.name
         return cast(T, path)
-=======
-    def assets(cls) -> Self:
-        path = cls.script_assets / cls.source_root.name
-        return cast("Self", path)
-
-    @classmethod
-    @classproperty
-    def config(cls) -> Self:
-        path = cls.assets / "config" / "config.yaml"
-        return cast("Self", path)
->>>>>>> template
