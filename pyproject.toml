@@ -14,7 +14,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-    "package-dev-tools >=0.7.0, <1",
+    "package-dev-tools >=0.7.1, <1",
     "package-dev-utils >=0.1.6, <1",
     "numpy >=1.26.0, <3",
     "torch >=1.26.0, <3",
