@@ -5,7 +5,7 @@ description = "Persistent cache for expensive functions"
 authors = [{name = "Quinten Roets", email = "qdr2104@columbia.edu"}]
 license = "MIT"
 readme = "README.md"
-requires-python = ">=3.10, <3.13"
+requires-python = ">=3.10"
 dependencies = [
     "package-utils >=0.6.7, <1",
     "powercli >=0.3.2, <1",
@@ -14,7 +14,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-    "package-dev-tools >=0.5.11, <1",
+    "package-dev-tools >=0.7.1, <1",
     "package-dev-utils >=0.1.6, <1",
     "numpy >=1.26.0, <3",
     "torch >=1.26.0, <3",
