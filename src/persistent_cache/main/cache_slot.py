@@ -87,11 +87,13 @@ class CacheSlot:
         if self.key_reducer is not None:
             return self.key_reducer
         if self.deep_learning:
-            from persistent_cache.reducers.deep_learning import Reducer as Reducer_
+            from persistent_cache.reducers.deep_learning import (  # noqa: PLC0415
+                Reducer as Reducer_,
+            )
 
             return Reducer_
         if self.speedup_deep_learning:
-            from persistent_cache.reducers.speedup_deep_learning import (
+            from persistent_cache.reducers.speedup_deep_learning import (  # noqa: PLC0415
                 Reducer as Reducer_,
             )
 

@@ -7,9 +7,9 @@ license = "MIT"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-    "package-utils >=0.6.7, <1",
-    "powercli >=0.3.2, <1",
-    "superpathlib >=2.0.9, <3",
+    "package-utils >=0.8.3, <1",
+    "powercli >=0.4.0, <1",
+    "superpathlib >=2.0.13, <3",
 ]
 
 [project.optional-dependencies]
