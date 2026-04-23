@@ -7,14 +7,14 @@ license = "MIT"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-    "package-utils >=0.6.7, <1",
-    "powercli >=0.3.2, <1",
-    "superpathlib >=2.0.9, <3",
+    "package-utils >=0.8.3, <1",
+    "powercli >=0.4.0, <1",
+    "superpathlib >=2.0.13, <3",
 ]
 
 [project.optional-dependencies]
 dev = [
-    "package-dev-tools >=0.7.1, <1",
+    "package-dev-tools >=0.8.0, <1",
     "package-dev-utils >=0.1.6, <1",
     "numpy >=1.26.0, <3",
     "torch >=1.26.0, <3",
@@ -54,6 +54,12 @@ select = ["ALL"]
 ignore = [
     "ANN401",   # annotated with Any
     "D",        # docstrings
+    "D1",       # missing docstrings
+    "D200",     # one-line docstring
+    "D203",     # conflicts with D211
+    "D205",     # blank line between summary and description
+    "D212",     # conflicts with D213
+    "D401",     # imperative first line
     "G004",     # logging f-string
 ]
 
