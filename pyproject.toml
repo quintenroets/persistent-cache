@@ -7,14 +7,19 @@ license = "MIT"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
+<<<<<<< HEAD
     "package-utils >=0.8.3, <1",
     "powercli >=0.4.0, <1",
     "superpathlib >=2.0.13, <3",
+=======
+    "package-utils[context] >=0.8.3, <1",
+    "powercli >=0.4.0, <1",
+>>>>>>> template
 ]
 
 [project.optional-dependencies]
 dev = [
-    "package-dev-tools >=0.8.0, <1",
+    "package-dev-tools >=0.8.1, <1",
     "package-dev-utils >=0.1.6, <1",
     "numpy >=1.26.0, <3",
     "torch >=1.26.0, <3",
