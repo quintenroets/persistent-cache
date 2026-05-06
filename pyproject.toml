@@ -7,14 +7,9 @@ license = "MIT"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-<<<<<<< HEAD
     "package-utils >=0.8.3, <1",
     "powercli >=0.4.0, <1",
     "superpathlib >=2.0.13, <3",
-=======
-    "package-utils[context] >=0.8.3, <1",
-    "powercli >=0.4.0, <1",
->>>>>>> template
 ]
 
 [project.optional-dependencies]
