@@ -9,13 +9,11 @@ from . import base
 class Reducer(base.Reducer):
     @classmethod
     def reduce_model(cls, model: torch.nn.Module) -> tuple[dict[str, Any], Any]:
-        """
-        Avoid pickling _forward_hooks of model:
-            implemented as OrderedDict with nondeterministic keys
-        Model outputs determined by:
-            - model weights
-            - class implementation (forward method)
-        """
+        # avoid pickling _forward_hooks of model:
+        #     implemented as OrderedDict with nondeterministic keys
+        # model outputs determined by:
+        #     - model weights
+        #     - class implementation (forward method)
         return model.state_dict(), model.__class__
 
     @classmethod

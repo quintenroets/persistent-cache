@@ -42,9 +42,7 @@ def main(options: Options) -> None:
         for path in Options.cache_path.find(should_remove, recurse_on_match=True):
             if options.verbose:
                 relative_path = path.relative_to(Options.cache_path)
-                timestamp = datetime.fromtimestamp(path.mtime).astimezone(
-                    tz=UTC,
-                )
+                timestamp = datetime.fromtimestamp(path.mtime).astimezone(tz=UTC)
                 message = f"{relative_path} ({timestamp})"
                 cli.console.print(message)
             path.unlink()

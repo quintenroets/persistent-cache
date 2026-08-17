@@ -49,7 +49,8 @@ def cache(  # noqa: PLR0913
     deep_learning: bool = False,
     speedup_deep_learning: bool = False,
 ) -> F | Callable[[F], F]:
-    """A decorator to cache function results. Decorated functions are only executed if
+    """
+    A decorator to cache function results. Decorated functions are only executed if
     result is not present in cache. The arguments of the function can be any nested
     complex object.
 
