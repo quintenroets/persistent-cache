@@ -4,7 +4,8 @@ from types import FunctionType, ModuleType
 
 
 class Reducer:
-    """Inherit from this class to implement own custom pickler.
+    """
+    Inherit from this class to implement own custom pickler.
 
     The result of each function are pickled further with their custom
     pickling function, so make sure to reduce each object to a new
@@ -14,15 +15,12 @@ class Reducer:
 
     @classmethod
     def reduce_code(cls, code_object: FunctionType | ModuleType | type) -> str:
-        """
-        custom lambda reduction needed:
-            https://www.pythonpool.com/cant-pickle-local-object/
-        custom module reduction needed:
-            https://stackoverflow.com/questions/2790828/python-cant-pickle-module-objects-error
-        name reduction for function/module/class is not enough because we assume
-        cache result can change when function/module/class implementation changes
-        """
-
+        # name reduction for function/module/class is not enough because we assume
+        # cache result can change when function/module/class implementation changes
+        # custom lambda reduction needed:
+        #     https://www.pythonpool.com/cant-pickle-local-object/
+        # custom module reduction needed:
+        #     https://stackoverflow.com/questions/2790828/python-cant-pickle-module-objects-error
         try:
             reduction = inspect.getsource(code_object)
         except (TypeError, OSError):

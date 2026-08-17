@@ -30,7 +30,8 @@ class HashPickler(pickle.Pickler):
         self.reducers = load_reducers(reducer)  # type: ignore[arg-type]
 
     def reducer_override(self, obj: Any) -> Any:
-        """The goal of this pickler is to create hashes of complex objects, not to
+        """
+        The goal of this pickler is to create hashes of complex objects, not to
         reconstruct complex objects.
 
         So mapping does not need to be reversible.
