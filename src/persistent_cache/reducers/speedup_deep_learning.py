@@ -57,7 +57,3 @@ class Reducer(deep_learning.Reducer):
             label = None
 
         return length, data, label
-
-    @classmethod
-    def reduce_tensor(cls, tensor: torch.Tensor) -> NDArray[Any]:
-        return tensor.detach().cpu().numpy()

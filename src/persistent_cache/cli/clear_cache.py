@@ -1,6 +1,6 @@
 import time
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from functools import cached_property
 from typing import Annotated
 
@@ -43,7 +43,7 @@ def main(options: Options) -> None:
             if options.verbose:
                 relative_path = path.relative_to(Options.cache_path)
                 timestamp = datetime.fromtimestamp(path.mtime).astimezone(
-                    tz=timezone.utc,
+                    tz=UTC,
                 )
                 message = f"{relative_path} ({timestamp})"
                 cli.console.print(message)

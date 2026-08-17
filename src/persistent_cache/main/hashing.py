@@ -3,9 +3,10 @@ from __future__ import annotations
 import hashlib
 import inspect
 import io
+import itertools
 import pickle
 from types import UnionType
-from typing import TYPE_CHECKING, Any, get_args, get_origin, get_type_hints
+from typing import TYPE_CHECKING, Any, Union, get_args, get_origin, get_type_hints
 
 from persistent_cache.reducers.base import Reducer
 
@@ -14,18 +15,31 @@ if TYPE_CHECKING:
     from typing import BinaryIO  # pragma: nocover
 
 
+def extract_reducers(
+    reducer: type[Reducer],
+) -> Iterator[tuple[type, Callable[[Any], Any]]]:
+    for _, method in inspect.getmembers(reducer, predicate=inspect.ismethod):
+        for parameter_type in extract_types(method):
+            yield parameter_type, method
+
+
 def extract_types(method: Callable[[Any], Any]) -> Iterator[type]:
-    type_hints = get_type_hints(method).values()
-    if type_hints:
-        argument_type = next(iter(type_hints))
-        origin = get_origin(argument_type)
-        arguments = get_args(argument_type)
-        if origin is UnionType:
-            yield from arguments
-        elif origin is not None:
-            yield origin
-        else:
-            yield argument_type
+    type_hints = get_type_hints(method)
+    type_hints.pop("return", None)
+    for annotation in itertools.islice(type_hints.values(), 1):
+        yield from extract_annotation_types(annotation)
+
+
+def extract_annotation_types(annotation: Any) -> Iterator[type]:
+    origin = get_origin(annotation)
+    resolved_annotation = annotation if origin is None else origin
+    if resolved_annotation in (UnionType, Union):
+        for argument in get_args(annotation):
+            yield from extract_annotation_types(argument)
+    elif isinstance(resolved_annotation, type):
+        yield resolved_annotation
+    else:
+        yield from extract_annotation_types(resolved_annotation.__value__)
 
 
 class HashPickler(pickle.Pickler):
@@ -36,11 +50,7 @@ class HashPickler(pickle.Pickler):
     ) -> None:
         super().__init__(file_pointer)
         self.reducer = reducer
-        self.reducers = {}
-        for _, method in inspect.getmembers(reducer, predicate=inspect.ismethod):
-            argument_types = extract_types(method)
-            for argument_type in argument_types:
-                self.reducers[argument_type] = method
+        self.reducers = dict(extract_reducers(reducer))
 
     def reducer_override(self, obj: Any) -> Any:
         """The goal of this pickler is to create hashes of complex objects, not to
