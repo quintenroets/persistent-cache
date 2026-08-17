@@ -1,13 +1,13 @@
 [project]
 name = "persistent-function-cache"
-version = "0.2.2"
+version = "0.3.0"
 description = "Persistent cache for expensive functions"
 authors = [{name = "Quinten Roets", email = "qdr2104@columbia.edu"}]
 license = "MIT"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 dependencies = [
-    "package-utils >=0.8.3, <1",
+    "package-utils >=0.8.5, <1",
     "powercli >=0.4.0, <1",
     "superpathlib >=2.0.13, <3",
 ]
@@ -53,6 +53,7 @@ fix = true
 select = ["ALL"]
 ignore = [
     "ANN401",   # annotated with Any
+    "CPY001",   # missing copyright notice
     "D",        # docstrings
     "D1",       # missing docstrings
     "D200",     # one-line docstring
