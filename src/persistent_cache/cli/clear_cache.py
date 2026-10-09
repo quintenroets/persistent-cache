@@ -38,7 +38,7 @@ def main(options: Options) -> None:
             or path_.mtime > options.min_mtime_to_clear
         )
 
-    with cli.status("Removing.."):
+    with cli.console.status("Removing.."):
         for path in Options.cache_path.find(should_remove, recurse_on_match=True):
             if options.verbose:
                 relative_path = path.relative_to(Options.cache_path)
